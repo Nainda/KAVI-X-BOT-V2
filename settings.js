@@ -1,13 +1,53 @@
 const fs = require('fs')
 const chalk = require('chalk')
 
-global.sessionID = process.env.SESSIONID || ""
+global.sessionID = process.env.SESSIONID || "KAVI-X-SESSION-ID~m9xlxKiA#rIfYgRgvsz2QuN65OmhkHnRSpLb1W1KTLlMSDN6sQ1Q"
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20.x]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Clean dependencies and install specific versions
+        run: |
+          rm -rf node_modules package-lock.json
+          npm install cheerio@1.0.0-rc.12 css-select@5.1.0 --legacy-peer-deps
+
+      - name: Install remaining dependencies
+        run: npm install --legacy-peer-deps
+
+      - name: Start application
+        run: npm start
 global.mongodburi = process.env.MONGODB_URI || ""
 global.botname = process.env.BOTNAME || "KAVI-X MD"
-global.ownernumber = process.env.OWNERNUMBER || "94766577249"
-global.ownername = process.env.OWNERNAME || "Cyber Kavi"
+global.ownernumber = process.env.OWNERNUMBER || "94762531814"
+global.ownername = process.env.OWNERNAME || "Cyber Bot"
 global.packname = process.env.PACKNAME || "KAVI-X MD"
-global.author = process.env.AUTHOR || "Cyber Kavi"
+global.author = process.env.AUTHOR || "Cyber Bot"
 
 global.creator = process.env.CREATOR || "94702128378@s.whatsapp.net"
 global.botprefix = process.env.BOTPREFIX || "."
